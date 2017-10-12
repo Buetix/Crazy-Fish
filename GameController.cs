@@ -21,8 +21,8 @@ public class GameController : MonoBehaviour {
     private Text scoreText, keyText, levelText;
 
     /*ENEMY CONTROLLER*/
-    public float secondSpawnEneny; //bao nhieu giay se sinh ra enemy
-    public float enemyMoveSpeed; //toc do cua enemy
+    public float secondSpawnEneny; //how long it takes the enemy to spawn
+    public float enemyMoveSpeed; //how fast is the enemy
 
     [SerializeField]
     private GameObject[] enemy;
@@ -30,8 +30,8 @@ public class GameController : MonoBehaviour {
     private GameObject enemyPosition;
 
     /*KEY CONTROLLER*/
-    public float secondSpawnKey; //bao nhieu giay se sinh ra key
-    public float keyMoveSpeed; //toc to cua key
+    public float secondSpawnKey; //how long it takes for the key to spawn
+    public float keyMoveSpeed; 
 
  
     [SerializeField]
@@ -49,13 +49,13 @@ public class GameController : MonoBehaviour {
     private Player player;
 
     /*NEXT LEVEL*/
-    public GameObject nextLevelParticleSystem;//khi next level se hien hieu ung cua ParticleSystem
+    public GameObject nextLevelParticleSystem;//levelup will play an animation
     [SerializeField]
     private GameObject nextLevelShow;
     //private bool isNextLevel;
     
     /*TEMP VARIABLE - USED FOR WHEN UPGRATE LEVEL*/
-    private int tempNumberKeyPassLevel;// bien nay muc dich la luu cai numberKeyPassLevel de su dung cho muc dich khi tang level se tang so luong key passlevel
+    private int tempNumberKeyPassLevel;
     private float tempSecondSpawnEnemy;
     private float tempEnemyMoveSpeed;
 
@@ -64,7 +64,7 @@ public class GameController : MonoBehaviour {
 
     void Start()
     {
-        //Thiet lap he thong PlayerPrefs: endScore, bestScore, numberKey, level
+        
         PlayerPrefs.SetInt("CURRENT_SCORE", 0);
         currentScore = PlayerPrefs.GetInt("CURRENT_SCORE");
 
@@ -77,11 +77,11 @@ public class GameController : MonoBehaviour {
         PlayerPrefs.SetInt("LEVEL", 1);
         level = PlayerPrefs.GetInt("LEVEL");
 
-        //Tu sinh ra key va enemy
+        //Making the kay and enemy
         StartCoroutine(EnemySpawner());
         StartCoroutine(KeySpawner(key));
 
-        //Dua score, number key, level ra ngoai textbox hien thi len man hinh
+        //Places the score, number of keys and level to end screen
         scoreText.text = "Score: " + currentScore.ToString();
         keyText.text = numberKey.ToString();
         levelText.text = "Level: " + level.ToString();
@@ -119,11 +119,11 @@ public class GameController : MonoBehaviour {
         //StartCoroutine(EnemySpawner(enemy[1]));
     }
 
-    //Ham dung de tao ra enemy 
+    //The function to create the enemy
     IEnumerator EnemySpawner()
     {
         yield return new WaitForSeconds(secondSpawnEneny);
-        Vector3 tempEnemy = enemyPosition.transform.position;//lay vi tri cua enemyPosition de tu do sinh ra enemy
+        Vector3 tempEnemy = enemyPosition.transform.position;//sets the random position of the enemy
         tempEnemy.y = UnityEngine.Random.Range(-3.5f, 3.5f);
 
         Instantiate(this.enemy[RandomSpawnEnemy(this.level)], tempEnemy, Quaternion.identity);
@@ -131,7 +131,7 @@ public class GameController : MonoBehaviour {
 
     }
 
-    //Ham dung de tao ra key
+    //The function to create keys
     IEnumerator KeySpawner(GameObject key)
     {
         
@@ -154,29 +154,28 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    //Khi gom du so key duoc set trong numberKeyPassLevel se tu dong next level
+    //When the number of keys is the same as the numberKeyPassLevel you level up
     private void NextLevel(int level)
     {
         if(numberKey == numberKeyPassLevel)
         {
             level++;
             //this.isNextLevel = true;
-            //khi tang level se xuat hien hieu ung
             Instantiate(nextLevelParticleSystem, player.transform.position, player.transform.rotation);
             
-            //khi tang level se phat am thanh sound next level
+            //When a levelup is reached this sound is played
             player.audioSourceNextLevel.Play();
             
-            //Khi tang 1 level se tang them 1 don vi cua numberKeyPassLevel 
+            //When you gain a level the number of keys to next level is calculated
             numberKeyPassLevel = tempNumberKeyPassLevel * level;
 
             PlayerPrefs.SetInt("LEVEL", level);
             this.level = PlayerPrefs.GetInt("LEVEL");
 
-            //Khi tang level se giam thoi gian spawnenemy, nghia la tan suat xuat hien tang len
+            
             secondSpawnEneny = tempSecondSpawnEnemy - level * 0.2f;
 
-            //Khi tang level se tang toc do cua enemy la + 0.2f cho moi level
+            
             enemyMoveSpeed = tempEnemyMoveSpeed + level * 0.2f;
             //nextLevelShow.SetActive(true);
 
@@ -188,16 +187,16 @@ public class GameController : MonoBehaviour {
         switch (level)
         {
             case 1:
-                return 0; //sinh ra shark enemy 1
+                return 0; 
                 //break;
             case 2:
-                return 1; // sinh ra shark enemy 2
+                return 1; 
                 //break;
             case 3:
-                return 2; // sinh ra shark enemy 3
+                return 2; 
                // break;
             case 4:
-                return 3; // sinh ra octopus
+                return 3; 
             case 5:
                 return 4;
             case 6:

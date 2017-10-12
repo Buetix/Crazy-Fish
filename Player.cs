@@ -56,7 +56,7 @@ public class Player : MonoBehaviour {
         myRigidbody.velocity = new Vector3(0f, moveSpeed, 0f);
         myRigidbody.gravityScale = 0.07f;
 
-        //khi Fish di chuyen se tao ra am thanh
+        
         audioSourceMove.Play();
     }
 
@@ -65,7 +65,7 @@ public class Player : MonoBehaviour {
         myRigidbody.velocity = new Vector3(0f, -moveSpeed, 0f);
         myRigidbody.gravityScale = -0.07f;
 
-        //khi Fish di chuyen se tao ra am thanh
+        
         audioSourceMove.Play();
     }
 
@@ -80,7 +80,7 @@ public class Player : MonoBehaviour {
         if(collision.tag == "Key")
         {
             theGameController.numberKey++;
-            theGameController.currentScore += 5; //khi get 1 key se cong them 5 diem
+            theGameController.currentScore += 5; 
             Destroy(collision.gameObject);
 
             audioSourceGetKey.Play();
